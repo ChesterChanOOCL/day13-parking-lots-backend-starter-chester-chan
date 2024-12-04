@@ -1,3 +1,5 @@
 spring:
   application:
     name: "ParkingLot"
+Server:
+  port : 8080

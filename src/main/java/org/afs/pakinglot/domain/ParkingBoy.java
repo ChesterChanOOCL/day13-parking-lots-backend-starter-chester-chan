@@ -1,38 +1,54 @@
 package org.afs.pakinglot.domain;
 
+import org.afs.pakinglot.ParkingLotFullException;
+import org.afs.pakinglot.domain.exception.UnrecognizedTicketException;
+import org.afs.pakinglot.domain.strategies.ParkingStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.afs.pakinglot.domain.exception.UnrecognizedTicketException;
-import org.afs.pakinglot.domain.strategies.ParkingStrategy;
-import org.afs.pakinglot.domain.strategies.SequentiallyStrategy;
 
 public class ParkingBoy {
-    protected List<ParkingLot> parkingLots = new ArrayList<>();
-    private ParkingStrategy parkingStrategy = new SequentiallyStrategy();
+    public static final String NO_AVAILABLE_POSITION = "No available position";
+    public static final String UNRECOGNIZED_PARKING_TICKET = "Unrecognized parking ticket.";
+    private List<Ticket> ticketList = new ArrayList<>();
+    private List<ParkingLot> listOfParkingLots;
+    private ParkingStrategy parkingStrategy;
 
-    public ParkingBoy(List<ParkingLot> parkingLots) {
-        this.parkingLots = parkingLots;
-    }
 
-    public ParkingBoy(ParkingLot parkingLot) {
-        parkingLots.add(parkingLot);
-    }
-
-    public ParkingBoy(List<ParkingLot> parkingLots, ParkingStrategy parkingStrategy) {
-        this.parkingLots = parkingLots;
+    public ParkingBoy(List<ParkingLot> parkingLotLists, ParkingStrategy parkingStrategy) {
+        this.listOfParkingLots = parkingLotLists;
         this.parkingStrategy = parkingStrategy;
     }
 
     public Ticket park(Car car) {
-        return parkingStrategy.findParkingLot(parkingLots).park(car);
+        ParkingLot selectedLot = parkingStrategy.findParkingLot(listOfParkingLots);
+        if (selectedLot != null) {
+            Ticket ticket = selectedLot.park(car);
+            ticketList.add(ticket);
+            return ticket;
+        }
+        throw new ParkingLotFullException(NO_AVAILABLE_POSITION);
+    }
+
+    public List<ParkingLot> getParkingLotList() {
+        return this.listOfParkingLots;
+    }
+
+    public void setParkingLotList(List<ParkingLot> parkingLotList) {
+         this.listOfParkingLots = parkingLotList;
+    }
+
+    public List<Ticket> getTicketList() {
+        return ticketList;
     }
 
     public Car fetch(Ticket ticket) {
-        ParkingLot parkingLotOfTheTicket = parkingLots.stream()
-            .filter(parkingLot -> parkingLot.contains(ticket))
-            .findFirst()
-            .orElseThrow(UnrecognizedTicketException::new);
-        return parkingLotOfTheTicket.fetch(ticket);
+        if (ticketList.contains(ticket)) {
+            Car obtainedCar =  listOfParkingLots.get(ticket.getParkedToParkingLotId()).fetch(ticket);
+            ticketList.remove(ticket);
+            return obtainedCar;
+        } else {
+            throw new UnrecognizedTicketException(UNRECOGNIZED_PARKING_TICKET);
+        }
     }
 }

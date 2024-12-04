@@ -14,4 +14,6 @@ public class AvailableRateStrategy implements ParkingStrategy{
                 .max(Comparator.comparingDouble(ParkingLot::getAvailablePositionRate))
                 .orElseThrow(NoAvailablePositionException::new);
     }
+
+
 }

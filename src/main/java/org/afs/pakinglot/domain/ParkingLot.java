@@ -7,6 +7,8 @@ import java.util.Map;
 import org.afs.pakinglot.domain.exception.NoAvailablePositionException;
 import org.afs.pakinglot.domain.exception.UnrecognizedTicketException;
 
+import static org.afs.pakinglot.domain.ParkingBoy.UNRECOGNIZED_PARKING_TICKET;
+
 public class ParkingLot {
     private int id;
     private String name;
@@ -53,7 +55,7 @@ public class ParkingLot {
 
     public Car fetch(Ticket ticket) {
         if (!tickets.containsKey(ticket)) {
-            throw new UnrecognizedTicketException();
+            throw new UnrecognizedTicketException(UNRECOGNIZED_PARKING_TICKET);
         }
 
         return tickets.remove(ticket);
@@ -78,5 +80,6 @@ public class ParkingLot {
     public List<Ticket> getTickets() {
         return tickets.keySet().stream().toList();
     }
+
 
 }
