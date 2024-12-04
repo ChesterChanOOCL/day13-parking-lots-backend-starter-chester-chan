@@ -28,7 +28,7 @@ public class ParkingLotController {
     private ParkingBoy SmartParkingBoy;
     private ParkingBoy SuperSmartParkingBoy;
     
-    private ParkingBoy[] parkingBoysOptions = {StandParkingBoy, SmartParkingBoy, SuperSmartParkingBoy};
+    private String[] parkingBoysOptions = {"Standard", "Smart", "SuperSmart"};
 
 
     
@@ -49,6 +49,7 @@ public class ParkingLotController {
     @PostMapping("/park/{plateNumber}/{parkingBoy}")
     public ResponseEntity<Ticket> park(@PathVariable String plateNumber, @PathVariable String parkingBoy) {
 
+        System.out.println(parkingBoy);
         if (!Arrays.asList(parkingBoysOptions).contains(parkingBoy)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
