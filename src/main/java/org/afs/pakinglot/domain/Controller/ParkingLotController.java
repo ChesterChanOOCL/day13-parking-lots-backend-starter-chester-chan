@@ -82,5 +82,4 @@ public class ParkingLotController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
-
 }
