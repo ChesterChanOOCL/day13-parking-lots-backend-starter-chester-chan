@@ -10,6 +10,7 @@ import org.afs.pakinglot.domain.exception.UnrecognizedTicketException;
 import static org.afs.pakinglot.domain.ParkingBoy.UNRECOGNIZED_PARKING_TICKET;
 
 public class ParkingLot {
+    private final List<List<String>> spaces;
     private int id;
     private String name;
     private final Map<Ticket, Car> tickets = new HashMap<>();
@@ -25,11 +26,13 @@ public class ParkingLot {
         this.capacity = capacity;
     }
 
-    public ParkingLot(int id, String name, int capacity) {
+    public ParkingLot(int id, String name, int capacity, List<List<String>> spaces) {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
+        this.spaces = spaces;
     }
+
 
     public int getCapacity() {
         return capacity;

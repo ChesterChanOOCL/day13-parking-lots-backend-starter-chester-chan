@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/parking")
 public class ParkingLotController {
 
@@ -31,8 +32,6 @@ public class ParkingLotController {
     private String[] parkingBoysOptions = {"Standard", "Smart", "SuperSmart"};
 
 
-    
-    
     private ParkingLotController(ParkingLotService parkingLotService){
         this.parkingLotService = parkingLotService;
         List<ParkingLot> listofParkingLots = parkingLotService.getAllParkingLots();
@@ -42,7 +41,7 @@ public class ParkingLotController {
     }
 
     @GetMapping("/parking-lots")
-    public List<ParkingLot> getAll() {
+    public List<ParkingLot> getAllParkingLots() {
         return parkingLotService.getAllParkingLots();
     }
 
@@ -70,7 +69,7 @@ public class ParkingLotController {
         }
         return null;
     }
-    //write the fetch function
+
     @GetMapping("/fetch/{plateNumber}")
     public ResponseEntity<Car> fetch(@PathVariable String plateNumber) {
         for (ParkingLot parkingLot : parkingLotService.getAllParkingLots()) {
